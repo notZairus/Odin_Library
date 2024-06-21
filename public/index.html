@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odin Libra</title>
+  <style>
+    :root {
+      font-size: 16px;
+    }
+  </style>
+  <link rel="stylesheet" href="../src/output.css">
+  <script defer src="./script.js"></script>
+</head>
+<body class="h-full flex">
+  <div class="relative w-1/6 h-full bg-secondary px-4 py-10 flex flex-col">
+    <div class="absolute bottom-10">
+      <h1 class="text-white text-7xl font-bold">Odin Library</h1>
+    </div>
+    <div class="flex justify-center flex-col space-y-3">
+      <input type="text" id="title" placeholder="Book Name" class="rounded-md text-3xl px-2 py-1 outline-none">
+      <input type="number" id="pages" placeholder="Number of Pages" class="rounded-md text-3xl px-2 py-1 outline-none">
+      <input type="text" id="status" placeholder="Status (Read or Unread)" class="rounded-md text-3xl px-2 py-1 outline-none">
+      <button id="addBook_btn" class="text-white bg-red-500 py-4 px-8 text-2xl font-semibold rounded-lg">Add Book</button>
+    </div>
+  </div>
+  <main class="p-10 flex flex-col flex-1 space-y-5">
+    <h1 class="font-bold text-5xl">Books</h1>
+    <div id="bookContainer" class="flex-1 grid grid-cols-4 overflow-auto gap-5 pr-3">
+      
+      <!-- This is where the cards are going ^^ -->
+
+    </div>
+  </main>
+</body>
+</html>
