@@ -22,7 +22,7 @@ let cardStyles = {
 function displayNewBook () {
   let card = document.createElement('div');
   card.dataset.title = document.getElementById('title').value;
-  card.className = "bg-secondary h-96 rounded-2xl flex flex-col text-white p-4";
+  card.className = cardStyles.card;
 
   let contentContainer = document.createElement('div');
   contentContainer.className = cardStyles.contentContainer;
@@ -63,6 +63,11 @@ function displayNewBook () {
 
   buttonContainer.addEventListener('click', (event) => {
     let target = event.target;
+
+    if (target.textContent != 'Delete') {
+      return;
+    }
+    
     buttonContainer.parentElement.remove();
 
     Books = Books.filter(function (book) {
