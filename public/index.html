@@ -9,8 +9,22 @@
       font-size: 16px;
     }
   </style>
-  <link rel="stylesheet" href="../src/output.css">
   <script defer src="./script.js"></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1E1E1E',
+            secondary: '#3C3C3C',
+          }
+        }
+      }
+    }
+  </script>
+  
 </head>
 <body class="h-full flex">
   <div class="relative w-1/6 h-full bg-secondary px-4 py-10 flex flex-col">
@@ -20,17 +34,35 @@
     <div class="flex justify-center flex-col space-y-3">
       <input type="text" id="title" placeholder="Book Name" class="rounded-md text-3xl px-2 py-1 outline-none">
       <input type="number" id="pages" placeholder="Number of Pages" class="rounded-md text-3xl px-2 py-1 outline-none">
-      <input type="text" id="status" placeholder="Status (Read or Unread)" class="rounded-md text-3xl px-2 py-1 outline-none">
+      <select id="status" class="rounded-md text-3xl px-2 py-1 outline-none">
+        <option value="Not Started">Not Started</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Done">Done</option>
+      </select>
       <button id="addBook_btn" class="text-white bg-red-500 py-4 px-8 text-2xl font-semibold rounded-lg">Add Book</button>
     </div>
   </div>
-  <main class="p-10 flex flex-col flex-1 space-y-5">
-    <h1 class="font-bold text-5xl">Books</h1>
+  <main class="p-10 flex flex-col flex-1 space-y-5 bg-primary">
+    <h1 class="font-bold text-5xl text-white">Books</h1>
     <div id="bookContainer" class="flex-1 grid grid-cols-4 overflow-auto gap-5 pr-3">
       
       <!-- This is where the cards are going ^^ -->
 
     </div>
+    <dialog id="edit-dialog" class="backdrop-blur-3xl backdrop-sepia relative text-white backdrop-brightness-1.05 border border-black p-2 bg-secondary">
+      <button id="close-dialog" class="absolute text-2xl top-0 right-3">x</button>
+      <h1 class="font-bold text-4xl mb-4 text-center">Edit Book</h1>
+      <div class="flex flex-col space-y-3 text-black">
+        <input type="text" id="edit-title" placeholder="Book Name" class="border rounded-md text-3xl px-2 py-1 outline-none">
+        <input type="number" id="edit-pages" placeholder="Number of Pages" class="border rounded-md text-3xl px-2 py-1 outline-none">
+        <select id="edit-status" placeholder="Status (Read or Unread)" class="border rounded-md text-3xl px-2 py-1 outline-none">
+          <option value="Not Started">Not Started</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+        <button id="edit-addBook_btn" class="text-white bg-red-500 py-4 px-8 text-2xl font-semibold rounded-lg">Edit</button>  
+      </div>
+    </dialog>
   </main>
 </body>
 </html>

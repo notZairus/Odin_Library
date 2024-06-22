@@ -1,79 +1,142 @@
-
-function Book (title, pages, status){
-  this.title = title;
-  this.pages = pages;
-  this.status = status;
-}
-
-Book.prototype.getInfo = function (propertyName) {
-    return this[propertyName];
-}
-
 let cardStyles = {
   card : "bg-secondary h-96 rounded-2xl flex flex-col text-white p-4",
   contentContainer: "flex-1 flex flex-col justify-center",
   buttonContainer: "flex gap-4 justify-center",
   bookTitle: "font-bold text-4xl text-center mb-2",
   bookPages: "font-semibold text-2xl text-center",
-  status: "font-semibold text-3xl text-center mt-10",
+  bookStatus: "font-semibold text-3xl text-center mt-10",
   button: "text-white bg-red-500 py-4 px-8 text-xl font-semibold rounded-lg",
 }
 
-function displayNewBook () {
-  let card = document.createElement('div');
-  card.dataset.title = document.getElementById('title').value;
-  card.className = cardStyles.card;
+//BOOK CONSTRUCTOR
+function Book (title, pages, status) {
+  this.title = title;
+  this.pages = pages;
+  this.status = status;
+}
+Book.prototype.getInfo = function (propertyName) {
+    return this[propertyName];
+}
 
-  let contentContainer = document.createElement('div');
-  contentContainer.className = cardStyles.contentContainer;
-  card.appendChild(contentContainer);
 
-  let bookTitle = document.createElement('p');
-  bookTitle.textContent = document.getElementById('title').value;
-  bookTitle.className = cardStyles.bookTitle;
-  contentContainer.appendChild(bookTitle);
+//THIS IS WHERE I PUSH THE BOOKS
+let Books = [];
 
-  let bookPages = document.createElement('p');
-  bookPages.textContent = document.getElementById('pages').value;
-  bookPages.className = cardStyles.bookPages;
-  contentContainer.appendChild(bookPages);
 
-  let status = document.createElement('p');
-  status.textContent = document.getElementById('status').value;
-  status.className = cardStyles.status;
-  contentContainer.appendChild(status);
+//THIS IS WHERE I TEMPORARILY STORE THE TITLE
+//TO GET THE BOOK OBJECT INSIDE THE BOOK
+let selectedBookTitle = "";
 
-  let buttonContainer = document.createElement('div');
-  buttonContainer.className = cardStyles.buttonContainer;
-  card.appendChild(buttonContainer);
 
-  let Editbutton = document.createElement('button');
-  Editbutton.textContent = "Edit";
-  Editbutton.dataset.title = document.getElementById('title').value;
-  Editbutton.className = cardStyles.button;
-  buttonContainer.appendChild(Editbutton);
-  
-  let Deletebutton = document.createElement('button');
-  Deletebutton.textContent = "Delete";
-  Deletebutton.dataset.title = document.getElementById('title').value;
-  Deletebutton.className = cardStyles.button;
-  buttonContainer.appendChild(Deletebutton);
+//NEEDED HTML ELEMENTS
+let bookContainer = document.getElementById('bookContainer');
+let dialog = document.getElementById('edit-dialog');
 
-  bookContainer.appendChild(card);
 
-  buttonContainer.addEventListener('click', (event) => {
-    let target = event.target;
+document.getElementById('addBook_btn').addEventListener('click', () => {
+  Books.push(new Book(
+      document.getElementById('title').value,
+      document.getElementById('pages').value,
+      document.getElementById('status').value
+    )
+  );
 
-    if (target.textContent != 'Delete') {
+  reloadBookContainer();
+  clearInputs();
+});
+
+document.getElementById('edit-addBook_btn').addEventListener('click', () => {
+  Books.forEach((book, index) => {
+    if (book.title == selectedBookTitle) {
+
+      book.title = document.getElementById('edit-title').value;
+      book.pages = document.getElementById('edit-pages').value;
+      book.status = document.getElementById('edit-status').value;
+      
+      document.getElementById('edit-title').value = "";
+      document.getElementById('edit-pages').value = "";
+      document.getElementById('edit-status').value = "";
+
+      reloadBookContainer();
+      dialog.close();
       return;
     }
-    
-    buttonContainer.parentElement.remove();
-
-    Books = Books.filter(function (book) {
-      return book.title != target.dataset.title;
-    });
   })
+})
+
+document.getElementById('close-dialog').addEventListener('click', () => {
+  document.getElementById('edit-dialog').close();
+})
+
+
+
+//FUNCTIONSSSSSS
+function reloadBookContainer () {
+  while(bookContainer.firstElementChild) {
+    bookContainer.firstElementChild.remove();
+  }
+
+  Books.forEach(book => {
+    let card = document.createElement('div');
+    card.classList = cardStyles.card;
+    bookContainer.appendChild(card);
+
+    let contentContainer = document.createElement('div');
+    contentContainer.classList = cardStyles.contentContainer;
+    card.appendChild(contentContainer);
+
+    let bookTitle = document.createElement('p');
+    bookTitle.classList = cardStyles.bookTitle;
+    bookTitle.textContent = book.title;
+    contentContainer.appendChild(bookTitle);
+
+    let bookPages = document.createElement('p');
+    bookPages.classList = cardStyles.bookPages;
+    bookPages.textContent = book.pages;
+    contentContainer.appendChild(bookPages);
+
+    let bookStatus = document.createElement('p');
+    bookStatus.classList = cardStyles.bookStatus;
+    bookStatus.textContent = book.status;
+    contentContainer.appendChild(bookStatus);
+
+    let buttonContainer = document.createElement('div');
+    buttonContainer.classList = cardStyles.buttonContainer;
+    card.appendChild(buttonContainer);
+
+    let editBtn = document.createElement('button');
+    editBtn.dataset.title = book.title;
+    editBtn.classList = cardStyles.button;
+    editBtn.textContent = "Edit";
+    buttonContainer.appendChild(editBtn);
+
+    editBtn.addEventListener('click', () => {
+      dialog.showModal();
+      selectedBookTitle = editBtn.dataset.title;
+
+      document.getElementById('edit-title').value = book.title;
+      document.getElementById('edit-pages').value = book.pages;
+      document.getElementById('edit-status').value = book.status;
+    })
+
+    let deleteBtn = document.createElement('button');
+    deleteBtn.dataset.title = book.title;
+    deleteBtn.classList = cardStyles.button;
+    deleteBtn.textContent = "Delete";
+    buttonContainer.appendChild(deleteBtn);
+
+    deleteBtn.addEventListener('click', (event) => {
+      let target = event.target;
+
+      Books.forEach((book, index) => {
+        if (book.title == target.dataset.title) {
+          Books.splice(index, 1);
+          reloadBookContainer();
+          return;
+        }
+      })
+    })
+  });
 }
 
 function clearInputs () {
@@ -81,26 +144,3 @@ function clearInputs () {
   document.getElementById('pages').value = "";
   document.getElementById('status').value = "";
 }
-
-function addBook() {
-  Books.push(
-    new Book(
-      document.getElementById('title').value,
-      document.getElementById('pages').value,
-      document.getElementById('status').value
-    )
-  );
-}
-
-
-
-let Books = [];
-
-let AddBtn = document.getElementById('addBook_btn');
-let bookContainer = document.getElementById('bookContainer');
-
-AddBtn.addEventListener('click', () => {
-  displayNewBook();
-  addBook();
-  clearInputs();
-})
